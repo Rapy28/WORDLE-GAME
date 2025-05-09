@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentRow = 0;
     let currentCol = 0;
     let gameActive = false;
-    let isSubmitting = false; // Flag to prevent double submissions
+    let isSubmitting = false;
 
     const wordLists = {
         3: ["cat", "dog", "sun", "run", "big", "fly", "try", "cry", "sky", "pie", "ape", "elf", "gem", "ink", "joy", "kit", "log", "map", "owl", "pen"],
@@ -64,17 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-
         gameActive = true;
         currentRow = 0;
         currentCol = 0;
         gameMessage.textContent = 'Guess the word!';
         restartGameBtn.classList.add('hidden');
 
-
         setupArea.classList.add('hidden');
         gameArea.classList.remove('hidden');
-
 
         createGameBoard();
         createKeyboard();
@@ -82,11 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Target Word:", targetWord);
     }
 
-
     function createGameBoard() {
         gameBoard.innerHTML = '';
         gameBoard.style.gridTemplateRows = `repeat(${MAX_GUESSES}, 1fr)`;
-
 
         for (let i = 0; i < MAX_GUESSES; i++) {
             const rowDiv = document.createElement('div');
@@ -102,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
     function createKeyboard() {
         keyboardArea.innerHTML = '';
         const keysLayout = [
@@ -110,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
             "ASDFGHJKL",
             "ZXCVBNM"
         ];
-
 
         keysLayout.forEach(rowStr => {
             const rowDiv = document.createElement('div');
@@ -126,10 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
             keyboardArea.appendChild(rowDiv);
         });
 
-
         const bottomRow = document.createElement('div');
         bottomRow.classList.add('keyboard-row');
-
 
         const enterBtn = document.createElement('button');
         enterBtn.classList.add('key');
@@ -139,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
         enterBtn.addEventListener('click', handleSubmit);
         bottomRow.appendChild(enterBtn);
 
-
         const backspaceBtn = document.createElement('button');
         backspaceBtn.classList.add('key');
         backspaceBtn.textContent = 'Backspace';
@@ -148,10 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
         backspaceBtn.addEventListener('click', handleBackspace);
         bottomRow.appendChild(backspaceBtn);
 
-
         keyboardArea.appendChild(bottomRow);
     }
-
 
     function handleKeyPress(key) {
         if (!gameActive || currentCol >= currentWordLength) return;
@@ -170,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
     function handleBackspace() {
         if (!gameActive || currentCol <= 0) return;
    
@@ -184,12 +171,10 @@ document.addEventListener('DOMContentLoaded', () => {
         gameMessage.textContent = '';
     }
 
-
     async function handleSubmit() {
         if (!gameActive || isSubmitting) return;
        
         isSubmitting = true;
-
 
         if (currentCol !== currentWordLength) {
             gameMessage.textContent = `Word must be ${currentWordLength} letters long.`;
@@ -198,10 +183,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-
         const guess = getCurrentGuess();
         gameMessage.textContent = 'Checking word...';
-
 
         const isValidWord = await checkWordValidity(guess);
         if (!isValidWord) {
@@ -211,10 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-
         gameMessage.textContent = '';
         evaluateGuess(guess);
-
 
         if (guess === targetWord) {
             gameMessage.textContent = `Great job! You guessed it in ${currentRow + 1} ${currentRow + 1 === 1 ? "try" : "tries"}! 🎉`;
@@ -224,10 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-
         currentRow++;
         currentCol = 0;
-
 
         if (currentRow >= MAX_GUESSES) {
             gameMessage.textContent = `Game over. The word was ${targetWord}.`;
@@ -238,7 +217,6 @@ document.addEventListener('DOMContentLoaded', () => {
             isSubmitting = false;
         }, 300);
     }
-
 
     async function checkWordValidity(word) {
         if (!word) return false;
@@ -266,7 +244,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
     function getCurrentGuess() {
         let guess = '';
         for (let i = 0; i < currentWordLength; i++) {
@@ -275,7 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return guess.toUpperCase();
     }
-
 
     function evaluateGuess(guess) {
         const guessArray = guess.split('');
@@ -340,7 +316,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
     function updateKeyColor(letter, status) {
         const keyElement = keyboardArea.querySelector(`.key[data-key="${letter}"]`);
         if (keyElement) {
@@ -356,14 +331,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
     function updateKeyboardColors() {
         const keys = keyboardArea.querySelectorAll('.key');
         keys.forEach(key => {
             key.classList.remove('correct', 'present', 'absent');
         });
     }
-
 
     function shakeCurrentRow() {
         const rowElement = gameBoard.children[currentRow];
@@ -375,7 +348,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
     function resetGame() {
         setupArea.classList.remove('hidden');
         gameArea.classList.add('hidden');
@@ -385,7 +357,6 @@ document.addEventListener('DOMContentLoaded', () => {
         restartGameBtn.classList.add('hidden');
         isSubmitting = false;
     }
-
 
     function displayWord(word) {
         wordDisplay.innerHTML = '';
@@ -402,11 +373,9 @@ document.addEventListener('DOMContentLoaded', () => {
     startGameBtn.addEventListener('click', initializeGame);
     restartGameBtn.addEventListener('click', resetGame);
 
-
     document.addEventListener('keydown', (e) => {
         if (setupArea.classList.contains('hidden') && !gameArea.classList.contains('hidden')) {
             if (!gameActive && e.key !== 'Enter') return;
-
 
             const key = e.key.toUpperCase();
             if (key.length === 1 && key >= 'A' && key <= 'Z') {
