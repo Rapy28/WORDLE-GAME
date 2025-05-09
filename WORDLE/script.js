@@ -19,8 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let gameActive = false;
     let isSubmitting = false; // Flag to prevent double submissions
 
-
-    // Word lists by length
     const wordLists = {
         3: ["cat", "dog", "sun", "run", "big", "fly", "try", "cry", "sky", "pie", "ape", "elf", "gem", "ink", "joy", "kit", "log", "map", "owl", "pen"],
         4: ["boat", "tree", "fish", "frog", "jump", "play", "read", "sing", "walk", "talk", "acid", "bake", "calm", "dark", "echo", "fade", "glow", "hike", "idea", "jazz"],
@@ -163,8 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tile.textContent = key;
             tile.setAttribute('data-letter', key);
             tile.classList.add('filled');
-           
-            // Add animation for feedback
+
             tile.style.transform = 'scale(1.1)';
             setTimeout(() => {
                 tile.style.transform = 'scale(1)';
@@ -189,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     async function handleSubmit() {
-        // Prevent double submissions
         if (!gameActive || isSubmitting) return;
        
         isSubmitting = true;
@@ -238,8 +234,6 @@ document.addEventListener('DOMContentLoaded', () => {
             gameActive = false;
             restartGameBtn.classList.remove('hidden');
         }
-       
-        // Reset submission flag after a short delay to prevent rapid re-submissions
         setTimeout(() => {
             isSubmitting = false;
         }, 300);
@@ -286,43 +280,36 @@ document.addEventListener('DOMContentLoaded', () => {
     function evaluateGuess(guess) {
         const guessArray = guess.split('');
         const targetArray = targetWord.split('');
-   
-        // Count occurrences of each letter in the target word
+
         const targetLetterCounts = {};
         targetArray.forEach(letter => {
             targetLetterCounts[letter] = (targetLetterCounts[letter] || 0) + 1;
         });
-   
-        // First pass: mark correct letters
+
         for (let i = 0; i < currentWordLength; i++) {
             const tile = document.getElementById(`tile-${currentRow}-${i}`);
             const letter = guessArray[i];
-           
-            // Store the letter as a data attribute for the ::after pseudo-element
+
             tile.setAttribute('data-letter', letter);
            
             if (letter === targetArray[i]) {
-                // Add animation delay for staggered effect
                 tile.style.animationDelay = `${i * 0.1}s`;
                 setTimeout(() => {
                     tile.classList.add('correct');
                     updateKeyColor(letter, 'correct');
-                }, i * 100); // Staggered delay for each tile
+                }, i * 100); 
                 targetLetterCounts[letter]--;
             }
         }
    
-        // Second pass: mark present or absent letters
         for (let i = 0; i < currentWordLength; i++) {
             const tile = document.getElementById(`tile-${currentRow}-${i}`);
             const letter = guessArray[i];
-           
-            // Skip tiles already marked as correct
+
             if (letter === targetArray[i]) {
                 continue;
             }
-   
-            // Add animation delay for staggered effect
+
             tile.style.animationDelay = `${i * 0.1}s`;
            
             setTimeout(() => {
@@ -334,11 +321,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     tile.classList.add('absent');
                     updateKeyColor(letter, 'absent');
                 }
-            }, i * 100); // Staggered delay for each tile
+            }, i * 100);
         }
        
         if (guess === targetWord) {
-            // If it's a winning guess, add a small delay and then show success animation
             setTimeout(() => {
                 for (let i = 0; i < currentWordLength; i++) {
                     const tile = document.getElementById(`tile-${currentRow}-${i}`);
@@ -350,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }, 200);
                     }, bounceDelay);
                 }
-            }, currentWordLength * 100 + 300); // Wait for all color reveals to complete
+            }, currentWordLength * 100 + 300);
         }
     }
 
@@ -358,7 +344,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateKeyColor(letter, status) {
         const keyElement = keyboardArea.querySelector(`.key[data-key="${letter}"]`);
         if (keyElement) {
-            // Priority: correct > present > absent
             if (status === 'correct') {
                 keyElement.classList.remove('present', 'absent');
                 keyElement.classList.add('correct');
@@ -409,13 +394,11 @@ document.addEventListener('DOMContentLoaded', () => {
           const span = document.createElement('span');
           span.textContent = letter;
           span.classList.add('letter');
-          span.style.animationDelay = `${index * 0.1}s`; // staggered effect
+          span.style.animationDelay = `${index * 0.1}s`;
           wordDisplay.appendChild(span);
         });
     }
 
-
-    // Event Listeners
     startGameBtn.addEventListener('click', initializeGame);
     restartGameBtn.addEventListener('click', resetGame);
 
